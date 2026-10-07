@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园三维导览 · 校园公共信息与数据展示中心</title>
+
+    <!-- 三维页也走 Bootstrap，保证与其它页导航一致 -->
+    <link rel="stylesheet" href="../libs/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark campus-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="../home.html">校园信息中心</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="切换导航菜单">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../home.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../study-room.html">自习室查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../dashboard.html">数据看板</a></li>
+                    <li class="nav-item"><a class="nav-link" href="scene.html">校园三维导览</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-head">
+        <div class="container">
+            <h1>校园三维导览</h1>
+            <p>用 Three.js 搭建的校园微缩场景（课堂作业七的旋转展示台改造为校园场景）。</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <p id="feedback" role="status" aria-live="polite"></p>
+
+        <div id="scene-container">
+            <div class="scene-tip">鼠标左键拖拽旋转　·　滚轮缩放　·　右键平移</div>
+        </div>
+
+        <p class="chart-caption mt-2">
+            场景包含：地面、两栋教学楼、图书馆（带圆顶）、旗杆与红旗、三棵树。
+            红旗持续摆动，模型整体缓慢自转，可用鼠标自由观察。
+        </p>
+
+        <h2 class="section-title">场景构成说明</h2>
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title h6">几何体与材质</h3>
+                        <ul class="mb-0 small text-muted">
+                            <li>地面：<code>PlaneGeometry</code> + 深色材质，绕 X 轴旋转 −90° 平铺</li>
+                            <li>教学楼：<code>BoxGeometry</code>，两栋并排，颜色区分</li>
+                            <li>图书馆：<code>CylinderGeometry</code> 做主体、<code>SphereGeometry</code> 做圆顶</li>
+                            <li>旗杆：细长 <code>CylinderGeometry</code>；红旗：<code>PlaneGeometry</code></li>
+                            <li>树木：<code>CylinderGeometry</code> 树干 + <code>ConeGeometry</code> 树冠</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title h6">光源、相机与动画</h3>
+                        <ul class="mb-0 small text-muted">
+                            <li>光源：<code>AmbientLight</code> 环境光 + <code>DirectionalLight</code> 平行光</li>
+                            <li>相机：<code>PerspectiveCamera</code>，初始位于斜上方俯视</li>
+                            <li>交互：<code>OrbitControls</code> 提供拖拽旋转、滚轮缩放、右键平移</li>
+                            <li>动画：<code>requestAnimationFrame</code> 循环，红旗摆动 + 场景整体自转</li>
+                            <li>窗口 resize 时同步更新相机比例与渲染器尺寸</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="mt-3">
+            <a href="../study-room.html" class="btn btn-primary">去看自习室空位</a>
+            <a href="../dashboard.html" class="btn btn-outline-primary">去看数据看板</a>
+        </p>
+
+    </main>
+
+    <footer class="campus-footer">
+        <div class="container">
+            软件开发综合实践 · 课堂作业八整合练习 · 三维部分基于课堂作业七示例改造
+        </div>
+    </footer>
+
+    <!-- 加载顺序：库在前，自己的代码在后 -->
+    <script src="../libs/three.min.js"></script>
+    <script src="../libs/OrbitControls.js"></script>
+    <script src="../js/scene.js"></script>
+</body>
+
+</html>
