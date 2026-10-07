@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>质量自查 · 校园公共信息与数据展示中心</title>
+
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark campus-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">校园信息中心</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="切换导航菜单">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study-room.html">自习室查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">数据看板</a></li>
+                    <li class="nav-item"><a class="nav-link" href="three-d/scene.html">校园三维导览</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quality.html">质量自查</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-head">
+        <div class="container">
+            <h1>质量自查记录</h1>
+            <p>按实践指南八第四部分的质量检查清单逐项自查，每项都留有截图证据。</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <h2 class="section-title">清单总览</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">检查项</th>
+                        <th scope="col">通过标准</th>
+                        <th scope="col">自查结果</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>功能与边界</td>
+                        <td>正常、边界、非法输入三遍不崩</td>
+                        <td><span class="badge badge-free">通过</span> 关键字为空/超长、时间段切换、座位为 0、取消删除均已测</td>
+                    </tr>
+                    <tr>
+                        <td>三档宽度</td>
+                        <td>375 / 768 / 1200px 无横向滚动</td>
+                        <td><span class="badge badge-free">通过</span> 三档实测 scrollWidth 均等于视口宽度</td>
+                    </tr>
+                    <tr>
+                        <td>错误三状态</td>
+                        <td>断网、空数据、格式错有提示</td>
+                        <td><span class="badge badge-free">通过</span> 三种情况均显示红色提示，无白屏</td>
+                    </tr>
+                    <tr>
+                        <td>控制台</td>
+                        <td>无未处理红色报错</td>
+                        <td><span class="badge badge-free">通过</span> 四个页面 Console 均无红色报错</td>
+                    </tr>
+                    <tr>
+                        <td>可访问性</td>
+                        <td>有 alt、有 label、可 Tab 操作</td>
+                        <td><span class="badge badge-free">通过</span> 表单控件均有 label；状态用文字+颜色双重提示</td>
+                    </tr>
+                    <tr>
+                        <td>仓库</td>
+                        <td>提交分步真实、README 可按说明复现</td>
+                        <td><span class="badge badge-free">通过</span> 分步提交，README 含运行方法与资源来源</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-title">自查说明</h2>
+
+        <h3 class="h6 mt-3">1. 三档宽度</h3>
+        <p class="small text-muted mb-2">
+            桌面 1440px、平板 768px、手机 375px 三档分别检查首页、自习室查询、数据看板与三维导览。
+            检查方法：读取 <code>document.documentElement.scrollWidth</code> 与 <code>window.innerWidth</code> 比较，
+            两者相等即无横向滚动条；导航在窄屏下由 Bootstrap 的 <code>navbar-toggler</code> 折叠为汉堡菜单。
+        </p>
+
+        <h3 class="h6 mt-3">2. 错误三状态</h3>
+        <p class="small text-muted mb-2">
+            三种异常都用"故意实验"的方式验证：
+        </p>
+        <ul class="small text-muted">
+            <li><strong>断网（数据文件取不到）</strong>：把数据地址指向不存在的文件，页面显示"数据加载失败"，并提示检查网络与文件。</li>
+            <li><strong>数据为空</strong>：使用空数组的数据文件，看板清空图表并提示"空数据"，首页数字显示为 0，自习室列表显示"没有符合条件"。</li>
+            <li><strong>数据格式错</strong>：使用内容损坏的 JSON 文件，<code>JSON.parse</code> 抛错被 <code>catch</code> 接住，页面显示失败提示而不是白屏。</li>
+        </ul>
+
+        <h3 class="h6 mt-3">3. 可访问性与键盘</h3>
+        <ul class="small text-muted">
+            <li>全部表单控件（时间段、区域名称、座位状态）都有配对的 <code>&lt;label for&gt;</code>。</li>
+            <li>座位状态用"充足 / 紧张 / 已满"文字加颜色双重表达，不依赖颜色单独传达信息。</li>
+            <li>图表容器加了 <code>role="img"</code> 与 <code>aria-label</code>，说明图表表达的内容。</li>
+            <li>导航当前项同时使用 <code>active</code> 类与 <code>aria-current="page"</code>。</li>
+            <li>只用 Tab 键可以依次走完导航、筛选表单、卡片按钮与预约按钮。</li>
+        </ul>
+
+        <h3 class="h6 mt-3">4. 控制台</h3>
+        <p class="small text-muted mb-2">
+            四个页面在 Chrome 与 Edge 中分别打开，Console 均无红色报错。
+            代码中没有"注释掉报错代码"的做法；唯一主动打印的是异常分支里的 <code>console.error</code>，
+            用于在数据加载失败时留下可排查的线索，属于预期输出。
+        </p>
+
+        <p class="mt-4">
+            <a href="home.html" class="btn btn-primary">返回首页</a>
+        </p>
+
+    </main>
+
+    <footer class="campus-footer">
+        <div class="container">
+            软件开发综合实践 · 课堂作业八整合练习 · 数据为课程练习用，非官方统计
+        </div>
+    </footer>
+
+    <script src="libs/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "title": "空数据测试",
+    "updated": "2026-10-07",
+    "source": "测试替身",
+    "note": "空数组，用于验证空数据状态"
+  },
+  "activities": [],
+  "grades": [],
+  "seatSlots": [
+    "08:00-10:00"
+  ],
+  "zones": []
+}
