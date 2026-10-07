@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>设计思路图</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 28px 32px;
+            background: #ffffff;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #1f2733;
+        }
+
+        h1 {
+            font-size: 21px;
+            margin: 0 0 6px;
+        }
+
+        .sub {
+            color: #6b7684;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .row {
+            display: flex;
+            align-items: stretch;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .box {
+            border: 2px solid #0d6efd;
+            border-radius: 10px;
+            padding: 12px 16px;
+            background: #f5f9ff;
+            flex: 1;
+        }
+
+        .box.data {
+            border-color: #6f42c1;
+            background: #f7f4ff;
+        }
+
+        .box.core {
+            border-color: #0d6efd;
+            background: #eef5ff;
+        }
+
+        .box.module {
+            border-color: #198754;
+            background: #f2fbf6;
+        }
+
+        .box .title {
+            font-weight: 700;
+            font-size: 14.5px;
+            margin-bottom: 6px;
+        }
+
+        .box .desc {
+            font-size: 12.5px;
+            color: #4a5563;
+            line-height: 1.6;
+        }
+
+        .box code {
+            background: rgba(0, 0, 0, .06);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+        }
+
+        .arrow {
+            text-align: center;
+            color: #8a94a6;
+            font-size: 20px;
+            line-height: 1;
+            margin: 2px 0 12px;
+        }
+
+        .band {
+            border: 1px dashed #b9c2d0;
+            border-radius: 10px;
+            padding: 12px 14px 14px;
+            margin-bottom: 14px;
+        }
+
+        .band > .band-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #55606f;
+            margin-bottom: 10px;
+        }
+
+        .grid4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 11.5px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e7f0ff;
+            color: #0b5ed7;
+            margin-right: 6px;
+        }
+
+        .tag.g {
+            background: #e7f6ec;
+            color: #146c43;
+        }
+
+        .tag.p {
+            background: #f3ecff;
+            color: #59359a;
+        }
+
+        .foot {
+            font-size: 12px;
+            color: #6b7684;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>校园公共信息与数据展示中心 · 设计思路图</h1>
+    <div class="sub">
+        服务对象：云南大学在校学生　｜　解决的问题：查自习室空位、看场所使用热度、找校园建筑位置，三件事散在不同地方，本作品把它们集中到一个入口
+    </div>
+
+    <!-- 数据层 -->
+    <div class="band">
+        <div class="band-title">① 数据层（唯一数据源，保证各页面数字一致）</div>
+        <div class="row" style="margin-bottom:0">
+            <div class="box data">
+                <div class="title">data/data.json</div>
+                <div class="desc">
+                    <span class="tag p">meta</span>标题与数据来源声明<br>
+                    <span class="tag p">zones</span>6 个自习室区域的座位数据<br>
+                    <span class="tag p">seatSlots</span>5 个时间段<br>
+                    <span class="tag p">activities</span>8 条场所使用指数<br>
+                    <span class="tag p">usageTrend</span>4 个场所 × 7 天趋势<br>
+                    <span class="tag p">grades</span>成绩示例数据
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="arrow">▼</div>
+
+    <!-- 公共逻辑层 -->
+    <div class="band">
+        <div class="band-title">② 公共逻辑层（js/main.js，所有页面共用）</div>
+        <div class="row" style="margin-bottom:0">
+            <div class="box core">
+                <div class="title">Campus.loadCampusData()</div>
+                <div class="desc"><code>fetch</code> 加载 JSON，判断 <code>response.ok</code>，失败抛给 <code>catch</code></div>
+            </div>
+            <div class="box core">
+                <div class="title">Campus.getSeatStatus()</div>
+                <div class="desc">把剩余座位翻译成 充足 / 紧张 / 已满 三档状态</div>
+            </div>
+            <div class="box core">
+                <div class="title">Campus.readBookings() / saveBookings()</div>
+                <div class="desc">localStorage 读写，内部包 <code>try...catch</code> 防数据损坏</div>
+            </div>
+            <div class="box core">
+                <div class="title">markActiveNav()</div>
+                <div class="desc">按当前文件名给导航项加高亮与 <code>aria-current</code></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="arrow">▼</div>
+
+    <!-- 功能模块层 -->
+    <div class="band">
+        <div class="band-title">③ 功能模块层（5 个页面 + 统一顶部导航，当前页高亮）</div>
+        <div class="grid4" style="margin-bottom:12px">
+            <div class="box module">
+                <div class="title">home.html　首页</div>
+                <div class="desc">4 个数据概览卡 + 5 个模块入口 + 模块使用顺序说明</div>
+            </div>
+            <div class="box module">
+                <div class="title">study-room.html　自习室查询</div>
+                <div class="desc">按时间段 / 关键字 / 状态三重筛选；点击加入预约；预约存 localStorage</div>
+            </div>
+            <div class="box module">
+                <div class="title">dashboard.html　数据看板</div>
+                <div class="desc">ECharts 柱状图 + 饼图；jQuery 类型筛选；与自习室数据的对应表</div>
+            </div>
+            <div class="box module">
+                <div class="title">charts.html　双库图表</div>
+                <div class="desc">Chart.js 折线图 + 环形图；同页放 ECharts 柱状图作对照</div>
+            </div>
+        </div>
+        <div class="grid2">
+            <div class="box module">
+                <div class="title">three-d/scene.html　Three.js 三维导览</div>
+                <div class="desc">校园微缩场景：地面、两栋教学楼、圆顶图书馆、旗杆红旗、三棵树；环境光 + 平行光；<code>OrbitControls</code> 拖拽旋转与滚轮缩放；红旗顶点动画 + 场景自转</div>
+            </div>
+            <div class="box module">
+                <div class="title">a-frame/campus.html　A-Frame 场景</div>
+                <div class="desc">同样的校园场景用声明式标签实现：<code>a-sky</code> / <code>a-plane</code> / <code>a-box</code> / <code>a-sphere</code> / <code>a-cylinder</code>；旋转由 <code>animation</code> 组件声明</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="arrow">▼</div>
+
+    <!-- 质量保障 -->
+    <div class="band" style="margin-bottom:0">
+        <div class="band-title">④ 质量保障（贯穿开发全程）</div>
+        <div class="row" style="margin-bottom:0">
+            <div class="box" style="border-color:#dc3545;background:#fff5f6">
+                <div class="title">错误三状态处理</div>
+                <div class="desc">断网 → 提示检查网络；空数据 → 提示无记录并清空图表；JSON 格式错 → 提示解析失败位置</div>
+            </div>
+            <div class="box" style="border-color:#dc3545;background:#fff5f6">
+                <div class="title">响应式适配</div>
+                <div class="desc">Bootstrap 栅格 + 自定义媒体查询；375 / 768 / 1440px 三档均无横向滚动</div>
+            </div>
+            <div class="box" style="border-color:#dc3545;background:#fff5f6">
+                <div class="title">测试与仓库</div>
+                <div class="desc">15 个测试用例（正常 + 异常）全部通过；Git 分步提交，提交说明写明具体改动</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="foot">
+        技术栈：HTML / CSS / Bootstrap 5.3.3 / 原生 JavaScript / jQuery 3.7.1 / ECharts 5.5.1 / Chart.js 4.4.4 / Three.js / A-Frame
+    </div>
+
+</body>
+
+</html>
