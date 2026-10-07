@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "title": "校园公共信息与数据展示中心",
+    "updated": "2026-10-07",
+    "source": "云南大学校园生活观察数据（课程练习用，非官方统计）",
+    "note": "本文件是整合作品的统一数据源：home.html 概览、dashboard.html 图表、study-room.html 自习室名单都读取它，保证各模块数字一致。"
+  },
+  "activities": [
+    { "name": "图书馆学习", "type": "学习", "value": 85 },
+    { "name": "食堂就餐", "type": "生活", "value": 72 },
+    { "name": "操场运动", "type": "运动", "value": 60 },
+    { "name": "自习室学习", "type": "学习", "value": 90 },
+    { "name": "宿舍生活", "type": "生活", "value": 65 },
+    { "name": "篮球运动", "type": "运动", "value": 55 },
+    { "name": "实验室学习", "type": "学习", "value": 78 },
+    { "name": "校园活动", "type": "生活", "value": 48 }
+  ],
+  "grades": [
+    { "name": "李四", "score": 92 },
+    { "name": "王五", "score": 45 },
+    { "name": "赵六", "score": 77 },
+    { "name": "孙七", "score": 59 },
+    { "name": "周八", "score": 88 },
+    { "name": "吴九", "score": 105 },
+    { "name": "郑十", "score": -3 }
+  ],
+  "seatSlots": ["08:00-10:00", "10:00-12:00", "14:00-16:00", "16:00-18:00", "19:00-21:00"],
+  "zones": [
+    { "id": "Z1", "name": "明远楼 A 区", "free": 26, "total": 40, "updated": "08:20" },
+    { "id": "Z2", "name": "明远楼 B 区", "free": 8,  "total": 60, "updated": "08:20" },
+    { "id": "Z3", "name": "图书馆三层", "free": 14, "total": 50, "updated": "08:25" },
+    { "id": "Z4", "name": "图书馆四层", "free": 0,  "total": 45, "updated": "08:25" },
+    { "id": "Z5", "name": "格物楼自习室", "free": 33, "total": 36, "updated": "08:15" },
+    { "id": "Z6", "name": "致知楼自习室", "free": 12, "total": 48, "updated": "08:30" }
+  ]
+}

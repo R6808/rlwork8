@@ -1,0 +1,216 @@
+/* ============================================================
+   校园公共信息与数据展示中心 — 自定义样式
+   引入顺序：Bootstrap → 本文件（保证本文件能覆盖 Bootstrap）
+   ============================================================ */
+
+:root {
+    --campus-dark: #16213e;
+    --campus-blue: #0d6efd;
+    --campus-bg: #f5f7fa;
+}
+
+body {
+    background: var(--campus-bg);
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #333;
+}
+
+/* 顶部导航：全站统一 */
+.campus-navbar {
+    background: var(--campus-dark);
+}
+
+.campus-navbar .navbar-brand {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.campus-navbar .nav-link {
+    color: rgba(255, 255, 255, .75);
+}
+
+.campus-navbar .nav-link:hover {
+    color: #fff;
+}
+
+/* 当前页高亮（由 js/main.js 按文件名自动加 active 类） */
+.campus-navbar .nav-link.active {
+    color: #fff;
+    font-weight: 700;
+    border-bottom: 2px solid var(--campus-blue);
+}
+
+/* 页面标题区 */
+.page-head {
+    background: #fff;
+    border-bottom: 1px solid #e5e8ee;
+    padding: 22px 0 18px;
+    margin-bottom: 22px;
+}
+
+.page-head h1 {
+    font-size: 22px;
+    margin: 0 0 6px;
+}
+
+.page-head p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* 数据概览卡片 */
+.stat-card {
+    background: #fff;
+    border: 1px solid #e5e8ee;
+    border-radius: 10px;
+    padding: 16px 18px;
+    height: 100%;
+}
+
+.stat-card .label {
+    color: #6c757d;
+    font-size: 13px;
+}
+
+.stat-card .value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--campus-dark);
+    line-height: 1.3;
+}
+
+.stat-card .unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6c757d;
+    margin-left: 2px;
+}
+
+/* 区块 */
+.section-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 26px 0 12px;
+    padding-left: 10px;
+    border-left: 4px solid var(--campus-blue);
+}
+
+/* 图表容器：必须给定高度，否则 echarts 尺寸为 0 不显示 */
+.chart-box {
+    width: 100%;
+    height: 320px;
+    background: #fff;
+    border: 1px solid #e5e8ee;
+    border-radius: 10px;
+}
+
+/* 图表标题与来源说明 */
+.chart-caption {
+    font-size: 12px;
+    color: #6c757d;
+    margin: 8px 0 18px;
+}
+
+/* 自习室卡片 */
+.zone-card {
+    background: #fff;
+    border: 1px solid #e5e8ee;
+    border-radius: 10px;
+    padding: 14px 16px;
+    height: 100%;
+}
+
+.zone-card .zone-name {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.zone-card .zone-meta {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* 状态标签：文字 + 颜色双重提示，不只用颜色传达信息 */
+.badge-free {
+    background: #e7f6ec;
+    color: #146c43;
+    border: 1px solid #a3d9b8;
+}
+
+.badge-few {
+    background: #fff8e1;
+    color: #8a6d00;
+    border: 1px solid #f0d98c;
+}
+
+.badge-full {
+    background: #fdeaea;
+    color: #b02a37;
+    border: 1px solid #f1b0b7;
+}
+
+.zone-card.is-full {
+    opacity: .82;
+}
+
+/* 反馈条 */
+#feedback {
+    min-height: 24px;
+    font-size: 14px;
+}
+
+.feedback-error {
+    color: #b02a37;
+}
+
+.feedback-ok {
+    color: #146c43;
+}
+
+/* 三维页：让画布铺满内容区 */
+#scene-container {
+    width: 100%;
+    height: 560px;
+    background: var(--campus-dark);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+#scene-container canvas {
+    display: block;
+}
+
+.scene-tip {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    color: rgba(255, 255, 255, .8);
+    font-size: 12px;
+    background: rgba(0, 0, 0, .35);
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+/* 页脚 */
+.campus-footer {
+    margin-top: 40px;
+    padding: 18px 0;
+    background: #fff;
+    border-top: 1px solid #e5e8ee;
+    color: #6c757d;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* 手机宽度下：图表适当降低高度，避免过窄显得拥挤 */
+@media (max-width: 575.98px) {
+    .chart-box {
+        height: 260px;
+    }
+
+    #scene-container {
+        height: 380px;
+    }
+}

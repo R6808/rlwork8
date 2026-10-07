@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页 · 校园公共信息与数据展示中心</title>
+
+    <!-- 引入顺序：Bootstrap 在前，自定义样式在后（保证能覆盖） -->
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- 统一导航：四个模块的唯一入口 -->
+    <nav class="navbar navbar-expand-lg navbar-dark campus-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">校园信息中心</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="切换导航菜单">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study-room.html">自习室查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">数据看板</a></li>
+                    <li class="nav-item"><a class="nav-link" href="three-d/scene.html">校园三维导览</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-head">
+        <div class="container">
+            <h1>校园公共信息与数据展示中心</h1>
+            <p>把课堂作业四至七的成果组装成一个综合作品：自习室查询、使用情况图表、校园三维导览。</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- 反馈条：数据加载状态统一显示在这里 -->
+        <p id="feedback" role="status" aria-live="polite"></p>
+
+        <!-- 数据概览：数字来自 data/data.json，与看板、自习室页同源 -->
+        <h2 class="section-title">数据概览</h2>
+        <div class="row g-3">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="label">自习室区域数</div>
+                    <div class="value" id="stat-zones">—<span class="unit">个</span></div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="label">当前剩余座位</div>
+                    <div class="value" id="stat-free">—<span class="unit">个</span></div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="label">座位总数</div>
+                    <div class="value" id="stat-total">—<span class="unit">个</span></div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="label">平均使用指数</div>
+                    <div class="value" id="stat-avg">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模块入口：卡片式，来自课堂作业三的卡片墙做法 -->
+        <h2 class="section-title">功能模块</h2>
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="card-title h5">自习室查询</h3>
+                        <p class="card-text text-muted small">
+                            按时间段、区域、座位状态筛选自习室，支持把常去的时间段和座位存入本地，刷新后仍在。
+                        </p>
+                        <a href="study-room.html" class="btn btn-primary mt-auto">进入查询</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="card-title h5">数据看板</h3>
+                        <p class="card-text text-muted small">
+                            用柱状图与饼图展示校园各场所的使用指数，可按场所类型筛选，图表带标题、单位与数据来源。
+                        </p>
+                        <a href="dashboard.html" class="btn btn-primary mt-auto">查看图表</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="card-title h5">校园三维导览</h3>
+                        <p class="card-text text-muted small">
+                            用 Three.js 搭建的校园微缩场景，含教学楼、图书馆、旗杆与树木，可拖拽旋转、滚轮缩放。
+                        </p>
+                        <a href="three-d/scene.html" class="btn btn-primary mt-auto">进入导览</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主题衔接：把三个模块串成一条线 -->
+        <h2 class="section-title">怎么把三个模块连起来看</h2>
+        <div class="card">
+            <div class="card-body">
+                <ol class="mb-0">
+                    <li>先在<strong>自习室查询</strong>里看到哪些区域座位充足，选定一个时间段。</li>
+                    <li>再到<strong>数据看板</strong>确认这个场所的整体使用指数，避开高峰。</li>
+                    <li>最后到<strong>校园三维导览</strong>看它在校园里的位置，按方位找过去。</li>
+                </ol>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="campus-footer">
+        <div class="container">
+            软件开发综合实践 · 课堂作业八整合练习 · 数据为课程练习用，非官方统计
+        </div>
+    </footer>
+
+    <!-- 脚本顺序：库在前，自己的代码在后 -->
+    <script src="libs/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
+</body>
+
+</html>
