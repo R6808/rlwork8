@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自习室查询 · 校园公共信息与数据展示中心</title>
+
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark campus-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">校园信息中心</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="切换导航菜单">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study-room.html">自习室查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">数据看板</a></li>
+                    <li class="nav-item"><a class="nav-link" href="three-d/scene.html">校园三维导览</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-head">
+        <div class="container">
+            <h1>自习室查询</h1>
+            <p>数据来自 data/data.json，与首页概览、数据看板同源。</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <p id="feedback" role="status" aria-live="polite"></p>
+
+        <!-- 筛选区：表单控件都带 label -->
+        <form class="row g-3 align-items-end mb-2" id="filter-form">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <label for="slot" class="form-label">时间段</label>
+                <select id="slot" class="form-select">
+                    <!-- 选项由 js/study-room.js 依据数据填充，避免与数据不一致 -->
+                </select>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+                <label for="keyword" class="form-label">区域名称</label>
+                <input type="text" id="keyword" class="form-control" placeholder="如：明远楼、图书馆">
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+                <label for="status" class="form-label">座位状态</label>
+                <select id="status" class="form-select">
+                    <option value="all">全部</option>
+                    <option value="free">充足</option>
+                    <option value="few">紧张</option>
+                    <option value="full">已满</option>
+                </select>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill">筛选</button>
+                <button type="button" class="btn btn-outline-secondary" id="reset">重置</button>
+            </div>
+        </form>
+
+        <p class="chart-caption">
+            时间段选择会影响各区域的空位估算（不同时段上座率不同），选中后点"筛选"生效。
+        </p>
+
+        <div class="row g-3" id="zone-list">
+            <!-- 自习室卡片由 js/study-room.js 动态渲染 -->
+        </div>
+
+        <p id="empty-tip" class="text-muted mt-3" hidden>没有符合条件的自习室，请调整筛选条件。</p>
+
+        <!-- 本地存储模块 -->
+        <h2 class="section-title">我的预约（保存在本机浏览器）</h2>
+
+        <div class="row g-3 align-items-end mb-3">
+            <div class="col-12 col-sm-6 col-lg-4">
+                <label for="favorite-slot" class="form-label">常去时间段</label>
+                <select id="favorite-slot" class="form-select">
+                    <!-- 选项由脚本填充 -->
+                </select>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <button type="button" class="btn btn-success w-100" id="save-slot">保存为常去时间段</button>
+            </div>
+            <div class="col-12 col-lg-4">
+                <button type="button" class="btn btn-outline-danger w-100" id="clear-bookings">清空我的预约</button>
+            </div>
+        </div>
+
+        <ul class="list-group mb-3" id="booking-list">
+            <!-- 预约记录由脚本渲染 -->
+        </ul>
+
+    </main>
+
+    <footer class="campus-footer">
+        <div class="container">
+            软件开发综合实践 · 课堂作业八整合练习 · 数据为课程练习用，非官方统计
+        </div>
+    </footer>
+
+    <script src="libs/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/study-room.js"></script>
+</body>
+
+</html>
