@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery 改造对照 · 校园公共信息与数据展示中心</title>
+
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: Consolas, "Cascadia Mono", monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin: 0;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .code-block .cm { color: #6a9955; }
+        .code-block .kw { color: #569cd6; }
+        .code-block .fn { color: #dcdcaa; }
+        .code-block .st { color: #ce9178; }
+
+        .zone-chip {
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 3px 6px 3px 0;
+            border-radius: 14px;
+            font-size: 13px;
+            border: 1px solid #cfd6e0;
+            background: #fff;
+        }
+
+        .zone-chip.is-full { border-color: #f1b0b7; background: #fdeaea; color: #b02a37; }
+        .zone-chip.is-few { border-color: #f0d98c; background: #fff8e1; color: #8a6d00; }
+        .zone-chip.is-free { border-color: #a3d9b8; background: #e7f6ec; color: #146c43; }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark campus-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">校园信息中心</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="切换导航菜单">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study-room.html">自习室查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">数据看板</a></li>
+                    <li class="nav-item"><a class="nav-link" href="charts.html">双库图表</a></li>
+                    <li class="nav-item"><a class="nav-link" href="three-d/scene.html">校园三维导览</a></li>
+                    <li class="nav-item"><a class="nav-link" href="a-frame/campus.html">A-Frame 场景</a></li>
+                    <li class="nav-item"><a class="nav-link" href="jq-demo.html">jQuery 改造</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-head">
+        <div class="container">
+            <h1>jQuery 改造对照</h1>
+            <p>同一功能"按座位状态筛选自习室"，左边用原生 DOM 实现，右边用 jQuery 重构，两个结果必须一致。</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <p id="feedback" role="status" aria-live="polite"></p>
+
+        <div class="row g-4">
+            <!-- 原生版 -->
+            <div class="col-12 col-lg-6">
+                <h2 class="section-title">原生 DOM 版（改造前）</h2>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2 mb-2" id="native-filters">
+                            <button type="button" class="btn btn-sm btn-primary" data-status="all">全部</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status="free">充足</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status="few">紧张</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status="full">已满</button>
+                        </div>
+                        <div id="native-result" class="pt-1"></div>
+                    </div>
+                </div>
+
+                <pre class="code-block"><span class="cm">// 原生写法：逐个元素建节点、逐个按钮绑监听</span>
+<span class="kw">var</span> btns = document.querySelectorAll(<span class="st">'#native-filters button'</span>);
+
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="kw">0</span>; i &lt; btns.length; i++) {
+    btns[i].addEventListener(<span class="st">'click'</span>, <span class="kw">function</span> () {
+        <span class="kw">var</span> want = <span class="kw">this</span>.getAttribute(<span class="st">'data-status'</span>);
+        renderNative(want);
+    });
+}
+
+<span class="kw">function</span> <span class="fn">renderNative</span>(want) {
+    <span class="kw">var</span> box = document.getElementById(<span class="st">'native-result'</span>);
+    box.innerHTML = <span class="st">''</span>;                     <span class="cm">// 清空容器</span>
+
+    zones.filter(<span class="kw">function</span> (z) {
+        <span class="kw">return</span> want === <span class="st">'all'</span> || statusOf(z) === want;
+    }).forEach(<span class="kw">function</span> (z) {
+        <span class="kw">var</span> span = document.createElement(<span class="st">'span'</span>);   <span class="cm">// 建节点</span>
+        span.className = <span class="st">'zone-chip is-'</span> + statusOf(z);
+        span.textContent = z.name + <span class="st">'（余'</span> + z.free + <span class="st">'）'</span>;
+        box.appendChild(span);                                <span class="cm">// 插入</span>
+    });
+}</pre>
+            </div>
+
+            <!-- jQuery 版 -->
+            <div class="col-12 col-lg-6">
+                <h2 class="section-title">jQuery 版（改造后）</h2>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2 mb-2" id="jq-filters">
+                            <button type="button" class="btn btn-sm btn-primary" data-status="all">全部</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status="free">充足</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status="few">紧张</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status="full">已满</button>
+                        </div>
+                        <div id="jq-result" class="pt-1"></div>
+                    </div>
+                </div>
+
+                <pre class="code-block"><span class="cm">// jQuery 写法：事件委托绑定一次，模板字符串一次成型</span>
+$(<span class="st">'#jq-filters'</span>).on(<span class="st">'click'</span>, <span class="st">'button'</span>, <span class="kw">function</span> () {
+    <span class="kw">var</span> want = $(<span class="kw">this</span>).data(<span class="st">'status'</span>);      <span class="cm">// 自动转类型</span>
+    $(<span class="st">'#jq-filters button'</span>).removeClass(<span class="st">'btn-primary'</span>)
+        .addClass(<span class="st">'btn-outline-primary'</span>);
+    $(<span class="kw">this</span>).removeClass(<span class="st">'btn-outline-primary'</span>)
+        .addClass(<span class="st">'btn-primary'</span>);
+
+    <span class="kw">var</span> html = zones.filter(<span class="kw">function</span> (z) {
+        <span class="kw">return</span> want === <span class="st">'all'</span> || statusOf(z) === want;
+    }).map(<span class="kw">function</span> (z) {
+        <span class="kw">return</span> <span class="st">'&lt;span class="zone-chip is-'</span> + statusOf(z) + <span class="st">'"&gt;'</span>
+             + z.name + <span class="st">'（余'</span> + z.free + <span class="st">'）&lt;/span&gt;'</span>;
+    }).join(<span class="st">''</span>);
+
+    $(<span class="st">'#jq-result'</span>).html(html);                       <span class="cm">// 一行替换内容</span>
+});</pre>
+            </div>
+        </div>
+
+        <h2 class="section-title">改造要点对照</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">对比项</th>
+                        <th scope="col">原生 DOM</th>
+                        <th scope="col">jQuery</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>绑定监听</td>
+                        <td>循环给每个按钮各绑一次，4 个按钮 4 个监听器；按钮若动态增加还要重新绑</td>
+                        <td><code>on('click', 'button', fn)</code> 事件委托，父容器绑 1 次，后加的按钮自动生效</td>
+                    </tr>
+                    <tr>
+                        <td>取自定义属性</td>
+                        <td><code>getAttribute('data-status')</code>，取到的永远是字符串</td>
+                        <td><code>$(this).data('status')</code>，自动按类型转换</td>
+                    </tr>
+                    <tr>
+                        <td>切换选中样式</td>
+                        <td>要写 <code>classList.remove</code> + <code>classList.add</code> 两行</td>
+                        <td><code>removeClass().addClass()</code> 可链式调用，一行完成</td>
+                    </tr>
+                    <tr>
+                        <td>生成列表</td>
+                        <td><code>createElement</code> + 设属性 + <code>appendChild</code>，一个元素三行</td>
+                        <td>用 <code>map().join('')</code> 拼出 HTML 后 <code>.html()</code> 一次性写入</td>
+                    </tr>
+                    <tr>
+                        <td>代码量</td>
+                        <td>约 15 行</td>
+                        <td>约 13 行，但省掉了循环绑定与逐节点创建</td>
+                    </tr>
+                    <tr>
+                        <td>取舍</td>
+                        <td colspan="2">
+                            本项目里，<strong>列表动态渲染</strong>（自习室查询页）仍用原生 DOM，
+                            因为需要给每个卡片单独绑不同参数的回调，原生写起来更直观；
+                            <strong>筛选按钮与图表筛选</strong>改用 jQuery，事件委托省掉重复绑定，链式调用让代码更短。
+                            也就是说：不是"全盘换 jQuery"，而是按场景挑合适的写法。
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="mt-3">
+            <a href="study-room.html" class="btn btn-primary">看实际项目里的筛选功能</a>
+            <a href="dashboard.html" class="btn btn-outline-primary">看用 jQuery 做的图表筛选</a>
+        </p>
+
+    </main>
+
+    <footer class="campus-footer">
+        <div class="container">
+            软件开发综合实践 · 平时大作业三 · jQuery 改造说明（课堂作业六要求）
+        </div>
+    </footer>
+
+    <script src="libs/jquery-3.7.1.min.js"></script>
+    <script src="libs/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        /* 两个版本共用同一份数据与同一个状态判定函数，保证结果一致 */
+        var zones = [
+            { name: '明远楼 A 区', free: 26, total: 40 },
+            { name: '明远楼 B 区', free: 8, total: 60 },
+            { name: '图书馆三层', free: 14, total: 50 },
+            { name: '图书馆四层', free: 0, total: 45 },
+            { name: '格物楼自习室', free: 33, total: 36 },
+            { name: '致知楼自习室', free: 12, total: 48 }
+        ];
+
+        function statusOf(z) { return Campus.getSeatStatus(z).key; }
+
+        /* ---------- 原生版 ---------- */
+        function renderNative(want) {
+            var box = document.getElementById('native-result');
+            box.innerHTML = '';
+            zones.filter(function (z) {
+                return want === 'all' || statusOf(z) === want;
+            }).forEach(function (z) {
+                var span = document.createElement('span');
+                span.className = 'zone-chip is-' + statusOf(z);
+                span.textContent = z.name + '（余' + z.free + '）';
+                box.appendChild(span);
+            });
+        }
+        var btns = document.querySelectorAll('#native-filters button');
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener('click', function () {
+                var want = this.getAttribute('data-status');
+                for (var j = 0; j < btns.length; j++) {
+                    btns[j].className = 'btn btn-sm btn-outline-primary';
+                }
+                this.className = 'btn btn-sm btn-primary';
+                renderNative(want);
+            });
+        }
+
+        /* ---------- jQuery 版 ---------- */
+        $(function () {
+            $('#jq-filters').on('click', 'button', function () {
+                var want = $(this).data('status');
+
+                $('#jq-filters button').removeClass('btn-primary').addClass('btn-outline-primary');
+                $(this).removeClass('btn-outline-primary').addClass('btn-primary');
+
+                var html = zones.filter(function (z) {
+                    return want === 'all' || statusOf(z) === want;
+                }).map(function (z) {
+                    return '<span class="zone-chip is-' + statusOf(z) + '">'
+                         + z.name + '（余' + z.free + '）</span>';
+                }).join('');
+
+                $('#jq-result').html(html || '<span class="text-muted">没有符合条件的自习室</span>');
+            });
+
+            /* 初始渲染：两版都显示全部 */
+            renderNative('all');
+            $('#jq-result').html(zones.map(function (z) {
+                return '<span class="zone-chip is-' + statusOf(z) + '">'
+                     + z.name + '（余' + z.free + '）</span>';
+            }).join(''));
+
+            /* 自检：两版结果必须一致 */
+            var same = document.getElementById('native-result').innerHTML ===
+                       document.getElementById('jq-result').innerHTML;
+            Campus.setFeedback(document.querySelector('#feedback'),
+                same ? '两种写法初始渲染结果一致（可分别点两个面板的按钮对照）。'
+                     : '警告：两种写法结果不一致，请检查实现。', !same);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双库图表 · 校园公共信息与数据展示中心</title>
+
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark campus-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">校园信息中心</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="切换导航菜单">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study-room.html">自习室查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">数据看板</a></li>
+                    <li class="nav-item"><a class="nav-link" href="charts.html">双库图表</a></li>
+                    <li class="nav-item"><a class="nav-link" href="three-d/scene.html">校园三维导览</a></li>
+                    <li class="nav-item"><a class="nav-link" href="a-frame/campus.html">A-Frame 场景</a></li>
+                    <li class="nav-item"><a class="nav-link" href="jq-demo.html">jQuery 改造</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-head">
+        <div class="container">
+            <h1>双库图表对照（ECharts 与 Chart.js）</h1>
+            <p>同一个数据源，两个图表库各画一种图型，用于对比选型。数据来自 data/data.json 的 usageTrend 字段。</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <p id="feedback" role="status" aria-live="polite"></p>
+
+        <!-- jQuery 交互：切换 Chart.js 折线图展示哪些场所 -->
+        <div class="d-flex flex-wrap gap-2 mb-3" id="series-filters">
+            <button type="button" class="btn btn-primary btn-sm" data-series="all">全部场所</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-series="学习">只看学习类</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-series="生活">只看生活类</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-series="运动">只看运动类</button>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-7">
+                <div class="chart-box">
+                    <canvas id="trend-chart" role="img"
+                            aria-label="折线图：各场所一周使用指数变化"></canvas>
+                </div>
+                <p class="chart-caption">
+                    图 1（Chart.js）　各场所一周使用指数变化（纵轴：使用指数 0–100，横轴：星期）<br>
+                    数据来源：data/data.json · usageTrend.series
+                </p>
+            </div>
+
+            <div class="col-12 col-lg-5">
+                <div class="chart-box">
+                    <canvas id="share-chart" role="img"
+                            aria-label="环形图：各场所使用指数占比"></canvas>
+                </div>
+                <p class="chart-caption">
+                    图 2（Chart.js）　各场所七天使用指数占比（单位：%）<br>
+                    数据来源：data/data.json · usageTrend.series 按场所求和后计算
+                </p>
+            </div>
+        </div>
+
+        <h2 class="section-title">同一份数据的 ECharts 版</h2>
+        <p class="text-muted small">
+            下面是课堂作业六用 ECharts 做的场所使用指数柱状图（数据取自 activities 字段），与本页 Chart.js 版本对照，
+            可以直观看出两个库在图表类型、配置方式和交互上的差异。
+        </p>
+        <div class="chart-box">
+            <div id="echarts-bar" role="img" aria-label="柱状图：各场所使用指数（ECharts）"
+                 style="width:100%;height:100%;"></div>
+        </div>
+        <p class="chart-caption">
+            图 3（ECharts）　校园各场所使用指数（单位：指数值 0–100）<br>
+            数据来源：data/data.json · activities 字段
+        </p>
+
+        <h2 class="section-title">两个库的对比小结</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">对比项</th>
+                        <th scope="col">ECharts</th>
+                        <th scope="col">Chart.js</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>图表类型</td>
+                        <td>非常丰富：柱状、折线、饼/环、散点、雷达、地图、桑基图、关系图等</td>
+                        <td>常用类型齐全：折线、柱状、饼/环、雷达、极区、气泡；没有地图与关系图</td>
+                    </tr>
+                    <tr>
+                        <td>配置方式</td>
+                        <td>一个 <code>setOption({...})</code> 声明式配置，选项极多但结构清晰</td>
+                        <td>构造时传 <code>data</code> 与 <code>options</code>，配置项相对精简、上手快</td>
+                    </tr>
+                    <tr>
+                        <td>交互能力</td>
+                        <td>内置数据缩放、图例筛选、工具箱（保存图片、切换类型）、提示框联动</td>
+                        <td>默认有提示框与图例点击隐藏，高级交互需自己写插件</td>
+                    </tr>
+                    <tr>
+                        <td>体积</td>
+                        <td>约 1.0 MB（全量版）</td>
+                        <td>约 200 KB，明显更小</td>
+                    </tr>
+                    <tr>
+                        <td>中文生态</td>
+                        <td>中文文档与示例完善，国内项目用得多</td>
+                        <td>英文文档为主，社区插件丰富</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>数据看板、多图联动、需要地图或复杂交互的场景</td>
+                        <td>页面里只需要一两张常规图表、对加载体积敏感的场景</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="mt-2">
+            <strong>我的选择结论：</strong>本作品的主看板用 <strong>ECharts</strong>，因为需要“柱状图 + 饼图 + 交互筛选 + 图例联动”这一整套看板能力，
+            而且它的 <code>tooltip</code> 与数据缩放开箱即用；而<strong>单一趋势图</strong>这类轻量需求用 <strong>Chart.js</strong> 更划算——
+            同样一张折线图，Chart.js 的库体积只有 ECharts 的约五分之一，配置代码也更短。
+            结论不是“哪个更好”，而是“按需求选”：**看板型页面选 ECharts，轻量图表选 Chart.js。**
+        </p>
+
+        <p class="mt-3">
+            <a href="dashboard.html" class="btn btn-primary">返回 ECharts 数据看板</a>
+            <a href="three-d/scene.html" class="btn btn-outline-primary">去看三维场景</a>
+        </p>
+
+    </main>
+
+    <footer class="campus-footer">
+        <div class="container">
+            软件开发综合实践 · 平时大作业三 · 可视化部分 ECharts 与 Chart.js 双库对照
+        </div>
+    </footer>
+
+    <!-- 加载顺序：jQuery → 两个图表库 → Bootstrap → main.js → 页面脚本 -->
+    <script src="libs/jquery-3.7.1.min.js"></script>
+    <script src="libs/echarts.min.js"></script>
+    <script src="libs/chart.umd.min.js"></script>
+    <script src="libs/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/charts.js"></script>
+</body>
+
+</html>
