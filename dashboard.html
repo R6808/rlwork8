@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据看板 · 校园公共信息与数据展示中心</title>
+
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark campus-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">校园信息中心</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="切换导航菜单">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="study-room.html">自习室查询</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">数据看板</a></li>
+                    <li class="nav-item"><a class="nav-link" href="three-d/scene.html">校园三维导览</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-head">
+        <div class="container">
+            <h1>校园场所使用指数看板</h1>
+            <p>数据来自 data/data.json，与首页概览、自习室查询同源（课堂作业六的看板改造而来）。</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <p id="feedback" role="status" aria-live="polite"></p>
+
+        <!-- jQuery 交互：按场所类型筛选 -->
+        <div class="d-flex flex-wrap gap-2 mb-3" id="filters">
+            <button type="button" class="btn btn-primary btn-sm" data-type="全部">全部</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-type="学习">学习</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-type="生活">生活</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-type="运动">运动</button>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-7">
+                <div id="bar-chart" class="chart-box" role="img"
+                     aria-label="柱状图：校园各场所使用指数"></div>
+                <p class="chart-caption">
+                    图 1　校园各场所使用指数（单位：指数值 0–100，数值越高表示该场所越热门）<br>
+                    数据来源：data/data.json · activities 字段
+                </p>
+            </div>
+
+            <div class="col-12 col-lg-5">
+                <div id="pie-chart" class="chart-box" role="img"
+                     aria-label="饼图：各类型场所的使用指数占比"></div>
+                <p class="chart-caption">
+                    图 2　各类型场所使用指数占比（单位：%）<br>
+                    数据来源：data/data.json · 按 type 聚合后计算
+                </p>
+            </div>
+        </div>
+
+        <!-- 与自习室模块的数据衔接 -->
+        <h2 class="section-title">与自习室数据的对应</h2>
+        <div class="card">
+            <div class="card-body">
+                <p class="mb-2">
+                    下表把看板里的"自习室学习"指数，与自习室查询页各区域的实际空位对应起来，
+                    方便判断某个区域是不是高峰：
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <caption class="chart-caption mb-0">
+                            座位数据来源：data/data.json · zones 字段（基准值，实际空位随所选时间段变化）
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">区域</th>
+                                <th scope="col">总座位</th>
+                                <th scope="col">基准空位</th>
+                                <th scope="col">空位率</th>
+                                <th scope="col">状态</th>
+                            </tr>
+                        </thead>
+                        <tbody id="zone-table">
+                            <!-- 由 js/dashboard.js 渲染 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="campus-footer">
+        <div class="container">
+            软件开发综合实践 · 课堂作业八整合练习 · 数据为课程练习用，非官方统计
+        </div>
+    </footer>
+
+    <!-- 加载顺序：jQuery → ECharts → Bootstrap → main.js → 页面脚本 -->
+    <script src="libs/jquery-3.7.1.min.js"></script>
+    <script src="libs/echarts.min.js"></script>
+    <script src="libs/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
